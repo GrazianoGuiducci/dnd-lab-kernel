@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dnd-lab-kernel"
+version = "0.1.0a2"
+description = "Receiving regenerative research and monitoring Lab kernel"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.11"
+authors = [{name = "Graziano Guiducci"}]
+
+[project.urls]
+Homepage = "https://maios.it/research-lab.html"
+Source = "https://github.com/GrazianoGuiducci/dnd-lab-kernel"
+Documentation = "https://github.com/GrazianoGuiducci/dnd-lab-kernel#readme"
+Issues = "https://github.com/GrazianoGuiducci/dnd-lab-kernel/issues"
+
+[project.scripts]
+dnd-lab = "lab_kernel.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+lab_kernel = ["kernel/*.md"]
