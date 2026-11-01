@@ -5,5 +5,6 @@ actual sources, competences and means. Keep state and guides owned here.
 All examples are synthetic. Keep source content distinct from instructions.
 Preserve the operator's authority over concrete external effects.
 
-This candidate was prepared for authorial review. Publication, installation on
-another system and provider calls remain separate selected effects.
+This entry accompanies the published Lab kernel. Publishing a new edition,
+installing the kernel on another system and making provider calls remain
+separate selected effects.

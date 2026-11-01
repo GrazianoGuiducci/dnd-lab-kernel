@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Align the receiving entry and its Python resource with the published Lab
+  status, replacing the superseded authorial-review candidate wording.
+
 ## 0.1.0a2 — 2026-10-31
 
 First public alpha release of Lab, under the MIT License.
