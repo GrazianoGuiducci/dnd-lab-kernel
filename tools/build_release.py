@@ -1,4 +1,5 @@
 """Build an explicit public-source ZIP and standalone semantic entry."""
+import argparse
 import hashlib
 import json
 import re
@@ -22,7 +23,7 @@ def sha(value):
     return hashlib.sha256(value).hexdigest()
 
 
-def build():
+def build(*, require_wheel=False):
     version = tomllib.loads((ROOT/'pyproject.toml').read_text(encoding='utf-8'))['project']['version']
     contents = {name:(ROOT/name).read_bytes() for name in FILES}
     for name in GUIDES:
@@ -33,7 +34,20 @@ def build():
     manifest = {'schema':'dnd.lab.distribution.v1','name':'Lab','version':version,
                 'status':'public_alpha_release','license':'MIT',
                 'files':{name:{'bytes':len(data),'sha256':sha(data)} for name,data in sorted(contents.items())}}
-    output=ROOT/'dist';output.mkdir(exist_ok=True)
+    output=ROOT/'dist'
+    wheel=output/('dnd_lab_kernel-'+version+'-py3-none-any.whl')
+    if require_wheel and not wheel.is_file():
+        raise ValueError('release_wheel_required')
+    if wheel.is_file():
+        with zipfile.ZipFile(wheel) as packaged:
+            if packaged.testzip() is not None:
+                raise ValueError('release_wheel_corrupt')
+            for name,data in contents.items():
+                if name.startswith('src/lab_kernel/'):
+                    member=name.removeprefix('src/')
+                    if member not in packaged.namelist() or packaged.read(member)!=data:
+                        raise ValueError('wheel_source_mismatch: '+member)
+    output.mkdir(exist_ok=True)
     manifest_bytes=(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n').encode('utf-8')
     archive=output/('lab-kernel-'+version+'.zip')
     with zipfile.ZipFile(archive,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
@@ -52,7 +66,6 @@ def build():
                       encoding='utf-8',newline='\n')
     (output/('MANIFEST-'+version+'.json')).write_bytes(manifest_bytes)
     assets=[archive,single,output/('MANIFEST-'+version+'.json')]
-    wheel=output/('dnd_lab_kernel-'+version+'-py3-none-any.whl')
     if wheel.is_file():
         assets.append(wheel)
     (output/('SHA256SUMS-'+version)).write_text(''.join(sha(p.read_bytes())+'  '+p.name+'\n' for p in assets),encoding='utf-8',newline='\n')
@@ -61,4 +74,7 @@ def build():
 
 
 if __name__=='__main__':
-    build()
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--require-wheel',action='store_true',
+                        help='Require a built, source-matching wheel for a complete release')
+    build(require_wheel=parser.parse_args().require_wheel)

@@ -7,10 +7,10 @@ temporary attention, open resultants and continuing competences. It can
 investigate varied questions, observe a system over time, and let the work
 change its methods and ways of recognising the next situation.
 
-Version **0.1.0a2 — alpha release**, distributed under the MIT license. The name remains Lab.
+Version **0.1.0a3 — alpha release**, distributed under the MIT license. The name remains Lab.
 [Italiano](README.it.md).
 
-[Download 0.1.0a2](https://github.com/GrazianoGuiducci/dnd-lab-kernel/releases/tag/v0.1.0a2) · [Research Lab on MAIOS](https://maios.it/research-lab.html).
+[Download 0.1.0a3](https://github.com/GrazianoGuiducci/dnd-lab-kernel/releases/tag/v0.1.0a3) · [Research Lab on MAIOS](https://maios.it/research-lab.html).
 
 ## What you receive
 
@@ -40,6 +40,10 @@ can also install this directory with `pip install .`; the `dnd-lab` command
 exposes the same support and includes the semantic resources. When editing
 the semantic source, run `python tools/sync_kernel.py` before building and
 verify the source/resource correspondence.
+
+When upgrading an existing receiving Lab, keep its chosen state directory.
+The corrected entry changes the contact contract: prepare a fresh contact
+after the upgrade instead of submitting an occurrence against an older packet.
 
 In the source tree these five readable documents are the live authority for
 instructions and contact identity. Installed wheels use the corresponding

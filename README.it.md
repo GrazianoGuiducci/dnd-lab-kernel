@@ -1,7 +1,7 @@
 # Lab
 
 **Kernel riusabile di ricerca e monitoraggio, capace di trasformare il modo
-in cui continua il lavoro.** Versione 0.1.0a2, release alpha con licenza MIT.
+in cui continua il lavoro.** Versione 0.1.0a3, release alpha con licenza MIT.
 
 Il Lab può affrontare questioni diverse, osservare un sistema nel tempo,
 formare metodi e competenze e usarli nel campo successivo. L'Entity è il
@@ -24,6 +24,10 @@ insieme a KERNEL, CONCEPTS e COMPETENCES. Nel sorgente operano i documenti
 leggibili; nella wheel le risorse corrispondenti. Una variazione rende
 riconoscibile il nuovo contesto e impedisce di depositare come corrente un
 evento preparato prima del cambiamento.
+
+Per aggiornare un Lab già in uso, conserva la directory del suo stato.
+L'ingresso corretto cambia il contratto del contatto: dopo l'aggiornamento
+prepara un nuovo contatto per continuare il lavoro.
 
 Il bridge ha raccolta stdout limitata durante la lettura (4 MiB di default)
 e un limite distinto per stderr (64 KiB, contato senza conservarne il testo).
@@ -60,5 +64,5 @@ Questo pacchetto nasce senza dati, identità o memoria del Lab originale.
 Lo stato appartiene alla directory scelta dal ricevente; le fonti private e
 il laboratorio operativo mantengono la propria continuità. Il pacchetto è distribuito con [licenza MIT](LICENSE), applicata ai file di
 questo repository. Le licenze delle fonti e dei repository storici restano
-proprie. [Scarica la release 0.1.0a2](https://github.com/GrazianoGuiducci/dnd-lab-kernel/releases/tag/v0.1.0a2)
+proprie. [Scarica la release 0.1.0a3](https://github.com/GrazianoGuiducci/dnd-lab-kernel/releases/tag/v0.1.0a3)
 e leggi le [verifiche e i loro limiti](docs/VALIDATION.md).

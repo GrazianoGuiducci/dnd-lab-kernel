@@ -1,4 +1,5 @@
 import copy
+import importlib.util
 from contextlib import contextmanager
 import json
 import os
@@ -7,7 +8,9 @@ import sqlite3
 import subprocess
 import sys
 import tempfile
+import tomllib
 import unittest
+import zipfile
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -313,6 +316,40 @@ class LabTests(unittest.TestCase):
     def test_installable_resources_equal_readable_semantic_source(self):
         for name in ('AGENTS.md', 'BOOT.md', 'KERNEL.md', 'CONCEPTS.md', 'COMPETENCES.md'):
             self.assertEqual((ROOT / name).read_bytes(), (ROOT / 'src/lab_kernel/kernel' / name).read_bytes())
+
+    def release_builder(self):
+        spec = importlib.util.spec_from_file_location('lab_release', ROOT / 'tools/build_release.py')
+        builder = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(builder)
+        source = Path(self.temp.name) / 'release-source'
+        for name in builder.FILES:
+            target = source / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes((ROOT / name).read_bytes())
+        builder.ROOT = source
+        return builder
+
+    def test_release_requires_requested_wheel_before_writing_artifacts(self):
+        builder = self.release_builder()
+        with self.assertRaisesRegex(ValueError, 'release_wheel_required'):
+            builder.build(require_wheel=True)
+        self.assertFalse((builder.ROOT / 'dist').exists())
+
+    def test_release_rejects_stale_receiving_entry_inside_wheel(self):
+        builder = self.release_builder()
+        version = tomllib.loads((builder.ROOT / 'pyproject.toml').read_text())['project']['version']
+        output = builder.ROOT / 'dist'
+        output.mkdir()
+        with zipfile.ZipFile(output / ('dnd_lab_kernel-' + version + '-py3-none-any.whl'), 'w') as wheel:
+            for name in builder.FILES:
+                if name.startswith('src/lab_kernel/'):
+                    content = (builder.ROOT / name).read_bytes()
+                    if name == 'src/lab_kernel/kernel/AGENTS.md':
+                        content = b'This candidate was prepared for authorial review.\n'
+                    wheel.writestr(name.removeprefix('src/'), content)
+        with self.assertRaisesRegex(ValueError, 'wheel_source_mismatch: lab_kernel/kernel/AGENTS.md'):
+            builder.build(require_wheel=True)
+        self.assertEqual(list(output.glob('*.zip')), [])
 
 
 if __name__ == '__main__':

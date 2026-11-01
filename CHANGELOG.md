@@ -1,9 +1,13 @@
 # Changelog
 
-## Unreleased
+## 0.1.0a3 — 2026-11-01
 
 - Align the receiving entry and its Python resource with the published Lab
   status, replacing the superseded authorial-review candidate wording.
+- Verify packaged Python source and semantic resources against the readable
+  release source; require the wheel when building a complete release.
+- Exercise the wheel in CI and distinguish current software verification
+  from the cognitive exercise performed on 0.1.0a2.
 
 ## 0.1.0a2 — 2026-10-31
 
